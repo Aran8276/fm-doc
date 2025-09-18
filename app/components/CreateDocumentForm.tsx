@@ -1,21 +1,20 @@
-// src/app/components/CreateDocumentForm.tsx
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function CreateDocumentForm() {
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title) return;
 
-    const res = await fetch('/api/documents', {
-      method: 'POST',
+    const res = await fetch("/api/documents", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ title }),
     });

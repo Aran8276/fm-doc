@@ -1,4 +1,3 @@
-// server.js
 import { WebSocketServer } from "ws";
 import { createServer } from "http";
 import { applyUpdate, encodeStateAsUpdate, Doc } from "yjs";
@@ -37,7 +36,7 @@ const attachPersistence = async (docName) => {
     );
   }
 
-  doc.on("update", (update) => {
+  doc.on("update", () => {
     if (debounceTimers.has(docName)) {
       clearTimeout(debounceTimers.get(docName));
     }
@@ -49,7 +48,6 @@ const attachPersistence = async (docName) => {
           where: { id: docName },
           data: { content },
         });
-        console.log(`[Saved] Document ${docName}`);
       } catch (error) {
         console.error(`[Error] Failed to save document ${docName}:`, error);
       }
@@ -59,7 +57,6 @@ const attachPersistence = async (docName) => {
   });
 
   persistenceAttached.add(docName);
-  console.log(`[Persistence Attached] Logic attached to ${docName}`);
 };
 
 const server = createServer((req, res) => {
@@ -81,6 +78,6 @@ server.on("upgrade", (request, socket, head) => {
   });
 });
 
-server.listen(8080, () => {
+server.listen(process.env.WEBSOCKET_PORT, () => {
   console.log("WebSocket server listening on port 8080");
 });

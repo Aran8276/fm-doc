@@ -1,4 +1,3 @@
-// src/app/documents/[documentId]/Editor.tsx
 "use client";
 
 import { useEffect, useRef } from "react";
@@ -24,6 +23,7 @@ const usercolors = [
   "#8acb88",
   "#1be7ff",
 ];
+
 const userColor = usercolors[Math.floor(Math.random() * usercolors.length)];
 
 export default function Editor({
@@ -40,7 +40,7 @@ export default function Editor({
 
     const ydoc = new Y.Doc();
     const provider = new WebsocketProvider(
-      "ws://10.101.3.175:8080",
+      `ws://${process.env.WEBSOCKET_URL}`,
       documentId,
       ydoc
     );

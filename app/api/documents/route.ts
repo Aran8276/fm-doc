@@ -1,4 +1,3 @@
-// src/app/api/documents/route.ts
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/src/lib/auth";

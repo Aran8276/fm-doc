@@ -1,4 +1,3 @@
-// src/app/documents/[documentId]/page.tsx
 import { authOptions } from "@/src/lib/auth";
 import prisma from "@/src/lib/prisma";
 import { getServerSession } from "next-auth";

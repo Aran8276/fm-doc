@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// src/types/y-websocket.d.ts
+
 declare module "y-websocket" {
   import * as Y from "yjs";
   import { Awareness } from "y-protocols/awareness";

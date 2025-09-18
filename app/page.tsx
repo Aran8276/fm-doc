@@ -1,4 +1,3 @@
-// src/app/page.tsx
 import prisma from "@/src/lib/prisma";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
