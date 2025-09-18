@@ -7,6 +7,11 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+    ADMIN
+    EDITOR
+}
+
 model User {
     id        String     @id @default(cuid())
     email     String     @unique
@@ -15,14 +20,25 @@ model User {
     documents Document[]
     createdAt DateTime   @default(now())
     updatedAt DateTime   @updatedAt
+    role      UserRole   @default(EDITOR)
+}
+
+model Material {
+    id       String     @id @default(cuid())
+    name     String
+    slug     String     @unique
+    Document Document[]
 }
 
 model Document {
-    id        String   @id @default(cuid())
-    title     String
-    content   String?
-    author    User     @relation(fields: [authorId], references: [id])
-    authorId  String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id         String   @id @default(cuid())
+    title      String
+    content    String?
+    slug       String   @unique
+    author     User     @relation(fields: [authorId], references: [id])
+    material   Material @relation(fields: [materialId], references: [id])
+    materialId String
+    authorId   String
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
 }

@@ -2,7 +2,7 @@ import prisma from "@/src/lib/prisma";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/src/lib/auth";
-import CreateDocumentForm from "./components/CreateDocumentForm";
+import CreateDocumentForm from "../../components/CreateDocumentForm";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);

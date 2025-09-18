@@ -25,7 +25,7 @@ export default async function Layout({
       }}
       tree={pageTree}
     >
-      {children}
+      <main className="container mx-auto p-4">{children}</main>
     </DocsLayout>
   );
 }
