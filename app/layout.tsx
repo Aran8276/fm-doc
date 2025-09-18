@@ -1,5 +1,5 @@
-import { HomeLayout } from "fumadocs-ui/layouts/home";
 import "./globals.css";
+import { HomeLayout } from "fumadocs-ui/layouts/home";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { getServerSession } from "next-auth";
@@ -29,7 +29,7 @@ export default async function RootLayout({
           <HomeLayout
             {...(session ? editorBaseOptions(session) : baseOptions())}
           >
-            <main className="container mx-auto p-4">{children}</main>
+            <main className="">{children}</main>
           </HomeLayout>
         </RootProvider>
       </body>

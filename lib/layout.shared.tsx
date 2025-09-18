@@ -1,9 +1,16 @@
 import type { BaseLayoutProps, LinkItemType } from "fumadocs-ui/layouts/shared";
 
+export const defaultTitle = "AranDocs";
+
 export const defaultLinks: LinkItemType[] = [
   {
+    type: "main",
+    text: "Dokumentasi",
+    url: "/",
+  },
+  {
     type: "menu",
-    text: "Beranda",
+    text: "Belajar",
     items: [
       {
         text: "Hub Belajar",
@@ -17,7 +24,7 @@ export const defaultLinks: LinkItemType[] = [
 export function baseOptions(): BaseLayoutProps {
   return {
     nav: {
-      title: "Dokumentasi Ekskul RPL",
+      title: defaultTitle,
     },
     links: defaultLinks,
   };
