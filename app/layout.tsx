@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/src/lib/auth";
+import { RootProvider } from "fumadocs-ui/provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,10 +21,17 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
 
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <nav className="bg-gray-800 text-white p-4">
-          <div className="container mx-auto flex justify-between">
+    <html lang="en" suppressHydrationWarning>
+      <body
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100vh",
+        }}
+        className={inter.className}
+      >
+        {/* <header className="bg-gray-800 text-white p-4">
+          <nav className="container mx-auto flex justify-between">
             <Link href="/" className="font-bold text-xl">
               Collab Editor
             </Link>
@@ -46,9 +54,11 @@ export default async function RootLayout({
                 </>
               )}
             </div>
-          </div>
-        </nav>
-        <main className="container mx-auto p-4">{children}</main>
+          </nav>
+        </header> */}
+        <RootProvider>
+          <main className="container mx-auto p-4">{children}</main>
+        </RootProvider>
       </body>
     </html>
   );

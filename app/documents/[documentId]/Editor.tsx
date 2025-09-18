@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { EditorView, basicSetup } from "codemirror";
+import { markdown } from "@codemirror/lang-markdown";
 import { EditorState } from "@codemirror/state";
 import { yCollab } from "y-codemirror.next";
 import { WebsocketProvider } from "y-websocket";
@@ -40,7 +41,7 @@ export default function Editor({
 
     const ydoc = new Y.Doc();
     const provider = new WebsocketProvider(
-      `ws://${process.env.WEBSOCKET_URL}`,
+      `ws://${process.env.NEXT_PUBLIC_WEBSOCKET_URL}`,
       documentId,
       ydoc
     );
@@ -54,7 +55,7 @@ export default function Editor({
 
     const state = EditorState.create({
       doc: ytext.toString() || initialContent,
-      extensions: [basicSetup, yCollab(ytext, provider.awareness)],
+      extensions: [basicSetup, yCollab(ytext, provider.awareness), markdown()],
     });
 
     const view = new EditorView({
