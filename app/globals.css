@@ -46,7 +46,6 @@
 :root {
   /* --fd-nav-height: 55px !important;  */
   --fd-tocnav-height: 55px !important;
-
   --fd-sidebar-width: 0px !important;
   --fd-toc-width: 0px !important;
   --radius: 0.625rem;
@@ -84,7 +83,8 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  /* --background: oklch(0.145 0 0); */
+  --background: oklch(0.235 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -155,25 +155,29 @@
   }
 
   #nd-sidebar {
-    @apply pt-12;
+    @apply !pt-12;
   }
 
   #nd-page {
     @apply !pt-0;
   }
 
-  .md {
-    --fd-sidebar-width: 0px !important;
-    --fd-toc-width: 0px !important;
+  #nd-toc {
+    @apply !pt-24;
   }
 
-  .lg {
-    --fd-sidebar-width: 0px !important;
-    --fd-toc-width: 0px !important;
+  .ͼ7,
+  .ͼ5 {
+    color: #eda35e !important;
   }
 
-  .xl {
-    --fd-sidebar-width: 0px !important;
-    --fd-toc-width: 0px !important;
+  .ͼ6,
+  .ͼc {
+    @apply !text-blue-400;
+  }
+
+  .dark {
+    --color-fd-card: #262626 !important;
+    --color-fd-background: #262626 !important;
   }
 }

@@ -1,7 +1,20 @@
 import { DocsPage, DocsBody } from "fumadocs-ui/page";
 import { notFound } from "next/navigation";
 import { getDocument } from "@/lib/source";
-import { compileMDX } from "next-mdx-remote/rsc";
+import { compileMDX } from "@fumadocs/mdx-remote";
+import defaultMdxComponents from "fumadocs-ui/mdx";
+import type { MDXComponents } from "mdx/types";
+import { remarkHeading, remarkStructure } from "fumadocs-core/mdx-plugins";
+
+export function getMDXComponents(components?: MDXComponents): MDXComponents {
+  return {
+    ...defaultMdxComponents, // for Fumadocs UI
+    ...components,
+  };
+}
+
+// export a `useMDXComponents()` that returns MDX components
+export const useMDXComponents = getMDXComponents;
 
 export default async function Page({
   params,
@@ -14,17 +27,17 @@ export default async function Page({
     notFound();
   }
 
-  // Compile the MDX content from the database
-  const { content } = await compileMDX({
+  const compiled = await compileMDX({
     source: page.content,
-    options: { parseFrontmatter: false }, // Frontmatter is not needed as it's handled by your database
   });
 
+  const MdxContent = compiled.body;
+
   return (
-    <DocsPage>
+    <DocsPage toc={compiled.toc}>
       <DocsBody>
         <h1>{page.title}</h1>
-        {content}
+        <MdxContent components={getMDXComponents()} />
       </DocsBody>
     </DocsPage>
   );

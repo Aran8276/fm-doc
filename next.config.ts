@@ -1,3 +1,4 @@
+import { getDefaultMDXOptions } from "fumadocs-mdx/config";
 import { createMDX } from "fumadocs-mdx/next";
 
 const withMDX = createMDX({
@@ -5,9 +6,15 @@ const withMDX = createMDX({
   // configPath: "source.config.ts"
 });
 
-/** @type {import('next').NextConfig} */
-const config = {
+export default withMDX({
   reactStrictMode: true,
-};
-
-export default withMDX(config);
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
+  },
+  
+});

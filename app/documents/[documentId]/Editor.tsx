@@ -16,9 +16,15 @@ import {
 } from "@/components/ui/resizable";
 import { compileMdxFromServer } from "./actions";
 import { Button } from "@/components/ui/button";
-import { Code, Columns2, MonitorPlay } from "lucide-react";
+import { CloudCheck, Code, Columns2, Loader, MonitorPlay } from "lucide-react";
 import { ImperativePanelHandle } from "react-resizable-panels";
 import { WebSocketErrorDialog } from "@/app/components/WebSocketErrorDialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { HighlightStyle, tags } from "@codemirror/highlight";
 
 interface EditorProps {
   documentId: string;
@@ -47,6 +53,7 @@ export default function Editor({
   const editorRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
 
+  const [isSaving, setIsSaving] = useState(false);
   const [editorContent, setEditorContent] = useState(initialContent);
   const [debouncedContent, setDebouncedContent] = useState(initialContent);
   const [compiledContent, setCompiledContent] =
@@ -57,16 +64,16 @@ export default function Editor({
     setIsErrorDialogOpen(false);
   };
 
-  const showWebSocketError = () => {
-    setIsErrorDialogOpen(true);
-  };
-
   useEffect(() => {
+    setIsSaving(false);
     const handler = setTimeout(() => {
       setDebouncedContent(editorContent);
+      setIsSaving(true);
     }, 500);
 
-    return () => clearTimeout(handler);
+    return () => {
+      clearTimeout(handler);
+    };
   }, [editorContent]);
 
   useEffect(() => {
@@ -125,6 +132,7 @@ export default function Editor({
             setEditorContent(v.state.doc.toString());
           }
         }),
+        
       ],
     });
 
@@ -173,6 +181,20 @@ export default function Editor({
         isOpen={isErrorDialogOpen}
         onClose={handleCloseDialog}
       />
+      <div className="absolute flex gap-2 right-12 z-[100] bottom-12">
+        {isSaving ? (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <CloudCheck />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Perubahan anda telah disimpan.</p>
+            </TooltipContent>
+          </Tooltip>
+        ) : (
+          <Loader className="animate-spin" />
+        )}
+      </div>
       <div className="absolute flex gap-2 right-6 z-[100] top-24">
         <Button
           onClick={collapseRightPanel}
