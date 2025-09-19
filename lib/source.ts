@@ -1,8 +1,13 @@
+// lib/source.ts
 import { PageTree } from "fumadocs-core/server";
 import prisma from "@/src/lib/prisma";
+import type { StructuredData } from "fumadocs-core/mdx-plugins";
 
-export async function getPageTree(): Promise<PageTree.Root> {
+export async function getPageTree(materialId: string): Promise<PageTree.Root> {
   const documents = await prisma.document.findMany({
+    where: {
+      materialId,
+    },
     select: {
       id: true,
       title: true,
@@ -17,7 +22,7 @@ export async function getPageTree(): Promise<PageTree.Root> {
     children: documents.map((doc) => ({
       type: "page",
       name: doc.title,
-      url: `/docs/${doc.id}`,
+      url: `/docs/${materialId}/${doc.id}`,
     })),
   };
 }
@@ -31,3 +36,38 @@ export async function getDocument(slug: string | undefined) {
     },
   });
 }
+
+async function getPages(): Promise<
+  { url: string; structuredData: StructuredData }[]
+> {
+  const documents = await prisma.document.findMany({
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      materialId: true,
+    },
+  });
+
+  return documents.map((doc) => ({
+    url: `/docs/${doc.materialId}/${doc.id}`,
+    structuredData: {
+      headings: [
+        {
+          id: "title",
+          content: doc.title,
+        },
+      ],
+      contents: [
+        {
+          heading: doc.title,
+          content: doc.content || "",
+        },
+      ],
+    },
+  }));
+}
+
+export const source = {
+  getPages,
+};

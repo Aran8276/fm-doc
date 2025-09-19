@@ -69,22 +69,22 @@ export default function CreateDocumentForm({
         <DialogTrigger asChild>
           <Button className="px-6 cursor-pointer h-full">
             <Plus />
-            Tambah Dokumentasi
+            Tambah Materi
           </Button>
         </DialogTrigger>
         <DialogContent>
           <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
             <DialogHeader>
-              <DialogTitle>Edit Materi Jurusan</DialogTitle>
+              <DialogTitle>Tambah Materi</DialogTitle>
             </DialogHeader>
             <div className="flex items-center gap-2">
               <div className="grid flex-1 gap-2">
                 <Label htmlFor="material" className="text-sm w-fit">
-                  Materi Jurusan
+                  Peminatan
                 </Label>
                 <Select required onValueChange={setMaterialId}>
-                  <SelectTrigger className="w-full mb-2">
-                    <SelectValue placeholder="Pilih materi jurusan" />
+                  <SelectTrigger id="material" className="w-full mb-2">
+                    <SelectValue placeholder="Pilih Peminatan" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
@@ -102,11 +102,11 @@ export default function CreateDocumentForm({
                 </Select>
 
                 <Label htmlFor="title" className="text-sm w-fit">
-                  Nama Dokumentasi
+                  Nama Materi
                 </Label>
                 <Input
                   required
-                  placeholder="Masukan nama dokumentasi..."
+                  placeholder="Masukan nama Materi..."
                   id="title"
                   type="text"
                   value={title}

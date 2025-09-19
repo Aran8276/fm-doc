@@ -44,6 +44,11 @@
 }
 
 :root {
+  /* --fd-nav-height: 55px !important;  */
+  --fd-tocnav-height: 55px !important;
+
+  --fd-sidebar-width: 0px !important;
+  --fd-toc-width: 0px !important;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -116,8 +121,13 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  button {
+    @apply cursor-pointer;
   }
 
   .codemirror-toolbar {
@@ -144,12 +154,26 @@
     @apply !bg-[#2b598f];
   }
 
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
+  #nd-sidebar {
+    @apply pt-12;
   }
 
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  #nd-page {
+    @apply !pt-0;
+  }
+
+  .md {
+    --fd-sidebar-width: 0px !important;
+    --fd-toc-width: 0px !important;
+  }
+
+  .lg {
+    --fd-sidebar-width: 0px !important;
+    --fd-toc-width: 0px !important;
+  }
+
+  .xl {
+    --fd-sidebar-width: 0px !important;
+    --fd-toc-width: 0px !important;
   }
 }

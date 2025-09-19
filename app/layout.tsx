@@ -7,6 +7,7 @@ import { authOptions } from "@/src/lib/auth";
 import { baseOptions } from "@/lib/layout.shared";
 import { editorBaseOptions } from "@/lib/editorLayout.shared";
 import { RootProvider } from "fumadocs-ui/provider";
+import NextTopLoader from "nextjs-toploader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,7 +30,8 @@ export default async function RootLayout({
           <HomeLayout
             {...(session ? editorBaseOptions(session) : baseOptions())}
           >
-            <main className="">{children}</main>
+            <NextTopLoader />
+            <main>{children}</main>
           </HomeLayout>
         </RootProvider>
       </body>

@@ -8,7 +8,7 @@ export default async function Page({
 }: {
   params: { slug?: string[] };
 }) {
-  const page = await getDocument(params.slug?.[0]);
+  const page = await getDocument(params.slug?.[1]);
 
   if (!page || !page.content) {
     notFound();

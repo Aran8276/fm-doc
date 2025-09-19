@@ -10,14 +10,24 @@ export function editorBaseOptions(session: Session): BaseLayoutProps {
     links: [
       ...defaultLinks,
       {
-        type: "main",
-        text: "Editor Materi",
-        url: "/editor-materials",
-      },
-      {
-        type: "main",
-        text: "Editor Dokumentasi",
-        url: "/editor-docs",
+        type: "menu",
+        text: "Editor",
+        items: [
+          {
+            type: "main",
+            text: "Editor Minat",
+            description:
+              "Datalist untuk membuat, menghapus, atau mengedit peminatan materi.",
+            url: "/editor-materials",
+          },
+          {
+            type: "main",
+            text: "Editor Materi",
+            description:
+              "Datalist untuk membuat, menghapus, atau mengedit materi utama.",
+            url: "/editor-docs",
+          },
+        ],
       },
       {
         type: "custom",

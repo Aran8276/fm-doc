@@ -23,6 +23,8 @@ const EditMaterialButton = ({
   doc: {
     id: string;
     name: string;
+    homeUrl: string;
+    imageUrl: string;
     createdAt: Date;
     updatedAt: Date;
     slug: string;
@@ -30,40 +32,49 @@ const EditMaterialButton = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
+  const [homeUrl, setHomeUrl] = useState("");
+  const [open, setOpen] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      if (!name) return;
+      if (!name || !homeUrl) return;
 
       const res = await fetch("/api/materials", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id: doc.id, name }),
+        body: JSON.stringify({ id: doc.id, name, homeUrl }),
       });
 
       if (res.ok) {
         const newMat = await res.json();
-        toast(`Materi Jurusan ${newMat.name} berhasil di edit!`);
+        toast(`Peminatan ${newMat.name} berhasil di edit!`);
         router.refresh();
+        setOpen(false);
+      } else {
+        toast.error("Failed to edit material.");
       }
     } catch (error) {
       console.log(error);
+      toast.error("An error occurred.");
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     if (doc) {
       setName(doc.name);
+      setHomeUrl(doc.homeUrl);
     }
   }, [doc]);
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           className="bg-blue-600 hover:bg-blue-600/80 text-white cursor-pointer"
@@ -75,18 +86,36 @@ const EditMaterialButton = ({
       <DialogContent>
         <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Edit Materi Jurusan</DialogTitle>
+            <DialogTitle>Edit Peminatan</DialogTitle>
           </DialogHeader>
-          <div className="flex items-center gap-2">
-            <div className="grid flex-1 gap-2">
+          <div className="grid gap-4">
+            <div className="flex flex-col space-y-2">
               <Label htmlFor="material" className="text-sm w-fit">
-                Nama Materi Jurusan
+                Nama Peminatan
               </Label>
               <Input
                 id="material"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
+            </div>
+            <div className="flex flex-col space-y-2">
+              <Label htmlFor="homeUrl" className="text-sm w-fit">
+                URL Beranda
+              </Label>
+              <Input
+                id="homeUrl"
+                value={homeUrl}
+                onChange={(e) => setHomeUrl(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col space-y-2">
+              <Label htmlFor="image" className="text-sm w-fit">
+                Gambar
+              </Label>
+              <p className="text-sm cursor-not-allowed p-3 bg-secondary rounded-md text-secondary-foreground">
+                Gambar tidak dapat diubah.
+              </p>
             </div>
           </div>
           <DialogFooter>
