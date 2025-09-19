@@ -18,13 +18,11 @@ import { compileMdxFromServer } from "./actions";
 import { Button } from "@/components/ui/button";
 import { CloudCheck, Code, Columns2, Loader, MonitorPlay } from "lucide-react";
 import { ImperativePanelHandle } from "react-resizable-panels";
-import { WebSocketErrorDialog } from "@/app/components/WebSocketErrorDialog";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { HighlightStyle, tags } from "@codemirror/highlight";
 
 interface EditorProps {
   documentId: string;
@@ -45,6 +43,33 @@ const usercolors = [
 
 const userColor = usercolors[Math.floor(Math.random() * usercolors.length)];
 
+const uploadFile = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(result.error || "Upload failed");
+    }
+
+    return result.path;
+  } catch (error) {
+    console.error("Upload error:", error);
+    throw error;
+  }
+};
+
 export default function Editor({
   documentId,
   initialContent,
@@ -57,12 +82,8 @@ export default function Editor({
   const [editorContent, setEditorContent] = useState(initialContent);
   const [debouncedContent, setDebouncedContent] = useState(initialContent);
   const [compiledContent, setCompiledContent] =
-    useState<React.ReactNode | null>(<div>Type to see a preview...</div>);
+    useState<React.ReactNode | null>(<div></div>);
   const [isPending, startTransition] = useTransition();
-  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
-  const handleCloseDialog = () => {
-    setIsErrorDialogOpen(false);
-  };
 
   useEffect(() => {
     setIsSaving(false);
@@ -93,16 +114,79 @@ export default function Editor({
 
   useEffect(() => {
     if (!editorRef.current || viewRef.current) return;
-    console.log(documentId);
+
+    const imageDropExtension = EditorView.domEventHandlers({
+      drop: (event, view) => {
+        event.preventDefault();
+        const files = event.dataTransfer?.files;
+        if (!files || files.length === 0) {
+          return;
+        }
+
+        const pos = view.posAtCoords({ x: event.clientX, y: event.clientY });
+        if (pos === null) {
+          return;
+        }
+
+        for (const file of Array.from(files)) {
+          if (file.type.startsWith("image/")) {
+            const placeholder = `![Uploading ${file.name}...]`;
+
+            view.dispatch({
+              changes: { from: pos, insert: placeholder },
+            });
+
+            uploadFile(file)
+              .then((path) => {
+                const markdownImage = `![${file.name}](${path})`;
+                const doc = view.state.doc.toString();
+                const placeholderIndex = doc.indexOf(
+                  placeholder,
+                  pos - placeholder.length - 10
+                );
+
+                if (placeholderIndex > -1) {
+                  view.dispatch({
+                    changes: {
+                      from: placeholderIndex,
+                      to: placeholderIndex + placeholder.length,
+                      insert: markdownImage,
+                    },
+                  });
+                }
+              })
+              .catch((err) => {
+                console.error(err);
+                const doc = view.state.doc.toString();
+                const placeholderIndex = doc.indexOf(
+                  placeholder,
+                  pos - placeholder.length - 10
+                );
+
+                if (placeholderIndex > -1) {
+                  view.dispatch({
+                    changes: {
+                      from: placeholderIndex,
+                      to: placeholderIndex + placeholder.length,
+                      insert: `[Upload failed for ${file.name}]`,
+                    },
+                  });
+                }
+              });
+          }
+        }
+      },
+      dragover: (event) => {
+        event.preventDefault();
+      },
+    });
 
     const ydoc = new Y.Doc();
-
     const provider = new WebsocketProvider(
       `ws://${process.env.NEXT_PUBLIC_WEBSOCKET_URL}`,
       documentId,
       ydoc
     );
-
     const ytext = ydoc.getText("codemirror");
 
     const onSync = (isSynced: boolean) => {
@@ -111,7 +195,6 @@ export default function Editor({
       }
       provider.off("sync", onSync);
     };
-
     provider.on("sync", onSync);
 
     provider.awareness.setLocalStateField("user", {
@@ -127,12 +210,12 @@ export default function Editor({
         toolbar({ items: markdownItems }),
         yCollab(ytext, provider.awareness),
         markdown(),
+        imageDropExtension,
         EditorView.updateListener.of((v) => {
           if (v.docChanged) {
             setEditorContent(v.state.doc.toString());
           }
         }),
-        
       ],
     });
 
@@ -153,34 +236,20 @@ export default function Editor({
   const rightPanelRef = useRef<ImperativePanelHandle>(null);
 
   const collapseLeftPanel = () => {
-    const panel = leftPanelRef.current;
-    if (panel) {
-      panel.collapse();
-    }
+    leftPanelRef.current?.collapse();
   };
 
   const collapseRightPanel = () => {
-    const panel = rightPanelRef.current;
-    if (panel) {
-      panel.collapse();
-    }
+    rightPanelRef.current?.collapse();
   };
 
   const resize5050Panel = () => {
-    const leftPanel = leftPanelRef.current;
-    const rightPanel = rightPanelRef.current;
-    if (leftPanel && rightPanel) {
-      leftPanel.resize(50);
-      rightPanel.resize(50);
-    }
+    leftPanelRef.current?.resize(50);
+    rightPanelRef.current?.resize(50);
   };
 
   return (
     <>
-      <WebSocketErrorDialog
-        isOpen={isErrorDialogOpen}
-        onClose={handleCloseDialog}
-      />
       <div className="absolute flex gap-2 right-12 z-[100] bottom-12">
         {isSaving ? (
           <Tooltip>

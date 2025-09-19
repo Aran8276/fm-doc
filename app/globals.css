@@ -155,7 +155,7 @@
   }
 
   #nd-sidebar {
-    @apply !pt-12;
+    @apply !pt-4;
   }
 
   #nd-page {

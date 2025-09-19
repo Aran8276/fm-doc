@@ -4,16 +4,14 @@ import { getDocument } from "@/lib/source";
 import { compileMDX } from "@fumadocs/mdx-remote";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import type { MDXComponents } from "mdx/types";
-import { remarkHeading, remarkStructure } from "fumadocs-core/mdx-plugins";
 
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
   return {
-    ...defaultMdxComponents, // for Fumadocs UI
+    ...defaultMdxComponents,
     ...components,
   };
 }
 
-// export a `useMDXComponents()` that returns MDX components
 export const useMDXComponents = getMDXComponents;
 
 export default async function Page({

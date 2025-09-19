@@ -22,20 +22,8 @@ export default async function Layout({
 
   return (
     <DocsLayout
+      disableThemeSwitch
       sidebar={{
-        enabled: true,
-        // tabs: [
-        //   {
-        //     title: "Components",
-        //     description: "Hello World!",
-        //     url: "/docs/cmfqbe1bi000ctwnc61v2wzbg",
-        //   },
-        //   {
-        //     title: "sad",
-        //     description: "dads World!",
-        //     url: "/docs/components",
-        //   },
-        // ],
         tabs: [
           ...tabs?.map((item) => {
             return {
