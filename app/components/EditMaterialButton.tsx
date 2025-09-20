@@ -47,7 +47,11 @@ const EditMaterialButton = ({ doc }: EditMaterialButtonProps) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id: doc.id, name, homeUrl }),
+        body: JSON.stringify({
+          id: doc.id,
+          name,
+          homeUrl: homeUrl === "private" ? "" : homeUrl,
+        }),
       });
 
       if (res.ok) {
@@ -110,6 +114,10 @@ const EditMaterialButton = ({ doc }: EditMaterialButtonProps) => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
+                      <SelectItem className="cursor-pointer" value="private">
+                        (Non Publik)
+                      </SelectItem>
+
                       {doc.Document.map((document) => (
                         <SelectItem
                           className="cursor-pointer"

@@ -12,6 +12,8 @@ import { adminBaseOptions } from "@/lib/adminLayout.shared";
 
 const inter = Inter({ subsets: ["latin"] });
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "FMDoc - AranDocs",
   description: "Real-time collaborative text editor",
@@ -23,8 +25,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
-
-  console.log(session?.user?.role);
   return (
     <html className="scroll-smooth" lang="en" suppressHydrationWarning>
       <body className={inter.className}>

@@ -27,7 +27,6 @@ const attachPersistence = async (docName) => {
     if (dbDoc && dbDoc.content && ytext.length === 0) {
       applyUpdate(doc, encodeStateAsUpdate(new Doc()));
       ytext.insert(0, dbDoc.content);
-      console.log(`[Loaded] Content for ${docName} from database.`);
     }
   } catch (e) {
     console.error(
