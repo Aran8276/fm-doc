@@ -11,26 +11,20 @@ export async function POST(req: Request) {
   if (!session?.user?.id) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
-
   try {
     const data = await req.formData();
     const name: string | null = data.get("name") as unknown as string;
-    const homeUrl: string | null = data.get("homeUrl") as unknown as string;
     const file: File | null = data.get("imageUrl") as unknown as File;
-
-    if (!name || !homeUrl || !file) {
+    if (!name || !file) {
       return NextResponse.json(
         { message: "Bad Request: Missing required fields" },
         { status: 400 }
       );
     }
-
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-
     const uploadsDir = path.join(process.cwd(), "public", "uploads");
     const filePath = path.join(uploadsDir, Date.now() + "_" + file.name);
-
     await writeFile(filePath, buffer);
 
     const imageUrl = `/uploads/${path.basename(filePath)}`;
@@ -40,7 +34,7 @@ export async function POST(req: Request) {
         name,
         slug: formatSlug(name),
         imageUrl,
-        homeUrl,
+        homeUrl: "",
       },
     });
 
@@ -56,20 +50,16 @@ export async function POST(req: Request) {
 
 export async function PUT(req: Request) {
   const session = await getServerSession(authOptions);
-
   if (!session?.user?.id) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
-
   const { name, id, homeUrl } = await req.json();
-
-  if (!id || !name || !homeUrl) {
+  if (!id || !name || typeof homeUrl !== "string") {
     return NextResponse.json(
       { message: "Bad Request: Missing required fields" },
       { status: 400 }
     );
   }
-
   const updatedMaterial = await prisma.material.update({
     where: {
       id,
@@ -80,6 +70,5 @@ export async function PUT(req: Request) {
       homeUrl,
     },
   });
-
   return NextResponse.json(updatedMaterial, { status: 200 });
 }

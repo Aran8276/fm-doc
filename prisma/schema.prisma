@@ -40,8 +40,8 @@ model Document {
     title      String
     content    String?
     slug       String   @unique
-    author     User     @relation(fields: [authorId], references: [id])
-    material   Material @relation(fields: [materialId], references: [id])
+    author     User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    material   Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
     materialId String
     authorId   String
     createdAt  DateTime @default(now())

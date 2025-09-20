@@ -17,40 +17,43 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function CreateMaterialForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
-  const [homeUrl, setHomeUrl] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [open, setOpen] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !homeUrl || !imageFile) {
+    if (!name || !imageFile) {
       toast.error("All fields are required.");
       return;
     }
-
     setLoading(true);
-
     try {
       const formData = new FormData();
       formData.append("name", name);
-      formData.append("homeUrl", homeUrl);
       formData.append("imageUrl", imageFile);
-
       const res = await fetch("/api/materials", {
         method: "POST",
         body: formData,
       });
-
       if (res.ok) {
         const newMat = await res.json();
         toast(`Materi ${newMat?.name} berhasil ditambahkan!`);
         setName("");
-        setHomeUrl("");
         setImageFile(null);
         const fileInput = document.getElementById(
           "imageFile"
@@ -59,6 +62,7 @@ export default function CreateMaterialForm() {
           fileInput.value = "";
         }
         setOpen(false);
+        setShowAlert(true);
       } else {
         toast.error("Failed to add material.");
       }
@@ -74,11 +78,26 @@ export default function CreateMaterialForm() {
   return (
     <>
       <Toaster position="bottom-center" />
+      <AlertDialog open={showAlert} onOpenChange={setShowAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Peminatan Berhasil Dibuat</AlertDialogTitle>
+            <AlertDialogDescription>
+              Selanjutnya, Anda perlu membuat Materi (Doc) untuk Peminatan ini
+              dan menetapkannya sebagai Materi Beranda.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setShowAlert(false)}>
+              Mengerti
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button className="px-6 cursor-pointer h-full">
-            <Plus />
-            Tambah Peminatan
+            <Plus /> Tambah Peminatan
           </Button>
         </DialogTrigger>
         <DialogContent>
@@ -96,17 +115,6 @@ export default function CreateMaterialForm() {
                   onChange={(e) => setName(e.target.value)}
                   required
                   placeholder="Masukkan nama Peminatan baru..."
-                />
-              </div>
-              <div className="flex flex-col space-y-2">
-                <Label htmlFor="homeUrl">URL Beranda</Label>
-                <Input
-                  id="homeUrl"
-                  type="text"
-                  value={homeUrl}
-                  onChange={(e) => setHomeUrl(e.target.value)}
-                  required
-                  placeholder="https://example.com"
                 />
               </div>
               <div className="flex flex-col space-y-2">
@@ -128,13 +136,11 @@ export default function CreateMaterialForm() {
               </DialogClose>
               {loading ? (
                 <Button disabled className="px-6 cursor-pointer">
-                  <Loader className="animate-spin" />
-                  Tambah
+                  <Loader className="animate-spin" /> Tambah
                 </Button>
               ) : (
                 <Button type="submit" className="px-6 cursor-pointer">
-                  <Plus />
-                  Tambah
+                  <Plus /> Tambah
                 </Button>
               )}
             </DialogFooter>

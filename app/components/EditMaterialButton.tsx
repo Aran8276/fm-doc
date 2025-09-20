@@ -16,20 +16,21 @@ import { useRouter } from "next/navigation";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { Material, Document } from "@prisma/client";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-const EditMaterialButton = ({
-  doc,
-}: {
-  doc: {
-    id: string;
-    name: string;
-    homeUrl: string;
-    imageUrl: string;
-    createdAt: Date;
-    updatedAt: Date;
-    slug: string;
-  };
-}) => {
+interface EditMaterialButtonProps {
+  doc: Material & { Document: Pick<Document, "id" | "title">[] };
+}
+
+const EditMaterialButton = ({ doc }: EditMaterialButtonProps) => {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const [homeUrl, setHomeUrl] = useState("");
@@ -40,8 +41,7 @@ const EditMaterialButton = ({
     e.preventDefault();
     setLoading(true);
     try {
-      if (!name || !homeUrl) return;
-
+      if (!name) return;
       const res = await fetch("/api/materials", {
         method: "PUT",
         headers: {
@@ -101,13 +101,32 @@ const EditMaterialButton = ({
             </div>
             <div className="flex flex-col space-y-2">
               <Label htmlFor="homeUrl" className="text-sm w-fit">
-                URL Beranda
+                Materi Beranda
               </Label>
-              <Input
-                id="homeUrl"
-                value={homeUrl}
-                onChange={(e) => setHomeUrl(e.target.value)}
-              />
+              {doc.Document.length > 0 ? (
+                <Select value={homeUrl} onValueChange={setHomeUrl}>
+                  <SelectTrigger className="w-full" id="homeUrl">
+                    <SelectValue placeholder="Pilih Materi Beranda" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {doc.Document.map((document) => (
+                        <SelectItem
+                          className="cursor-pointer"
+                          key={document.id}
+                          value={document.id}
+                        >
+                          {document.title}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              ) : (
+                <p className="text-sm cursor-not-allowed p-3 bg-secondary rounded-md text-secondary-foreground">
+                  Belum ada materi untuk peminatan ini.
+                </p>
+              )}
             </div>
             <div className="flex flex-col space-y-2">
               <Label htmlFor="image" className="text-sm w-fit">
@@ -122,22 +141,19 @@ const EditMaterialButton = ({
             <DialogClose asChild className="cursor-pointer">
               <Button variant={`outline`}>Batalkan</Button>
             </DialogClose>
-
             {loading ? (
               <Button
                 disabled
                 className="text-white bg-blue-500 hover:bg-blue-500/80 cursor-pointer"
               >
-                <Loader className="animate-spin" />
-                Edit
+                <Loader className="animate-spin" /> Edit
               </Button>
             ) : (
               <Button
                 type="submit"
                 className="text-white bg-blue-500 hover:bg-blue-500/80 cursor-pointer"
               >
-                <Pencil />
-                Edit
+                <Pencil /> Edit
               </Button>
             )}
           </DialogFooter>

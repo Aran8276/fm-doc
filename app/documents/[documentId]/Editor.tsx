@@ -179,6 +179,70 @@ export default function Editor({
       dragover: (event) => {
         event.preventDefault();
       },
+      paste: (event, view) => {
+        const files = event.clipboardData?.files;
+        if (!files || files.length === 0) {
+          return;
+        }
+
+        const imageFiles = Array.from(files).filter((file) =>
+          file.type.startsWith("image/")
+        );
+
+        if (imageFiles.length === 0) {
+          return;
+        }
+
+        event.preventDefault();
+
+        const pos = view.state.selection.main.head;
+
+        for (const file of imageFiles) {
+          const placeholder = `![Uploading ${file.name}...]`;
+
+          view.dispatch({
+            changes: { from: pos, insert: placeholder },
+          });
+
+          uploadFile(file)
+            .then((path) => {
+              const markdownImage = `![${file.name}](${path})`;
+              const doc = view.state.doc.toString();
+              const placeholderIndex = doc.indexOf(
+                placeholder,
+                pos - placeholder.length - 10
+              );
+
+              if (placeholderIndex > -1) {
+                view.dispatch({
+                  changes: {
+                    from: placeholderIndex,
+                    to: placeholderIndex + placeholder.length,
+                    insert: markdownImage,
+                  },
+                });
+              }
+            })
+            .catch((err) => {
+              console.error(err);
+              const doc = view.state.doc.toString();
+              const placeholderIndex = doc.indexOf(
+                placeholder,
+                pos - placeholder.length - 10
+              );
+
+              if (placeholderIndex > -1) {
+                view.dispatch({
+                  changes: {
+                    from: placeholderIndex,
+                    to: placeholderIndex + placeholder.length,
+                    insert: `[Upload failed for ${file.name}]`,
+                  },
+                });
+              }
+            });
+        }
+      },
     });
 
     const ydoc = new Y.Doc();
@@ -211,6 +275,7 @@ export default function Editor({
         yCollab(ytext, provider.awareness),
         markdown(),
         imageDropExtension,
+        EditorView.lineWrapping,
         EditorView.updateListener.of((v) => {
           if (v.docChanged) {
             setEditorContent(v.state.doc.toString());

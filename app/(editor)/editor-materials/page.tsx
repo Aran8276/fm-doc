@@ -5,22 +5,28 @@ import CreateMaterialForm from "@/app/components/CreateMaterialForm";
 import DeleteMaterialButton from "@/app/components/DeleteMaterialButton";
 import EditMaterialButton from "@/app/components/EditMaterialButton";
 import Image from "next/image";
-
 export default async function Home() {
   const session = await getServerSession(authOptions);
-  const documents = await prisma.material.findMany({
+  const materials = await prisma.material.findMany({
     orderBy: {
       createdAt: "desc",
     },
+    include: {
+      Document: {
+        select: {
+          id: true,
+          title: true,
+        },
+      },
+    },
   });
-
   return (
     <section className="container mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold mb-6">Peminatan</h1>
       {session && <CreateMaterialForm />}
       <ul className="mt-6 space-y-4">
-        {Array.isArray(documents) && documents.length > 0 ? (
-          documents.map((doc) => (
+        {Array.isArray(materials) && materials.length > 0 ? (
+          materials.map((doc) => (
             <li
               key={doc.id}
               className="flex items-center justify-start border rounded-md shadow-sm"

@@ -24,6 +24,7 @@ export default async function Layout({
     <DocsLayout
       disableThemeSwitch
       sidebar={{
+        prefetch: false,
         tabs: [
           ...tabs?.map((item) => {
             return {
