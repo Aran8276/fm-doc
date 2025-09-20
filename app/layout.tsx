@@ -13,7 +13,7 @@ import { adminBaseOptions } from "@/lib/adminLayout.shared";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Collaborative Editor",
+  title: "FMDoc - AranDocs",
   description: "Real-time collaborative text editor",
 };
 

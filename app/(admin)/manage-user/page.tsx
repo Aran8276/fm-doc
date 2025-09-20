@@ -22,7 +22,7 @@ export default async function ManageUserPage() {
           filteredUsers.map((user) => (
             <li
               key={user.id}
-              className="flex items-center justify-between p-4 border rounded-md shadow-sm"
+              className="flex items-center justify-between px-8 py-4 border rounded-md shadow-sm"
             >
               <div className="flex flex-col gap-1">
                 <p className="text-xl font-semibold">{user.name}</p>
