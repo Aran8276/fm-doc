@@ -8,6 +8,7 @@ import { baseOptions } from "@/lib/layout.shared";
 import { editorBaseOptions } from "@/lib/editorLayout.shared";
 import { RootProvider } from "fumadocs-ui/provider";
 import NextTopLoader from "nextjs-toploader";
+import { adminBaseOptions } from "@/lib/adminLayout.shared";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,12 +24,17 @@ export default async function RootLayout({
 }) {
   const session = await getServerSession(authOptions);
 
+  console.log(session?.user?.role);
   return (
     <html className="scroll-smooth" lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <RootProvider>
           <HomeLayout
-            {...(session ? editorBaseOptions(session) : baseOptions())}
+            {...(session?.user?.role === "ADMIN"
+              ? adminBaseOptions(session)
+              : session?.user?.role === "EDITOR"
+              ? editorBaseOptions(session)
+              : baseOptions(session))}
           >
             <NextTopLoader />
             <main>{children}</main>

@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/src/lib/auth";
 import CreateDocumentForm from "../../components/CreateDocumentForm";
 import DeleteDocButton from "@/app/components/DeleteDocButton";
+import EditDocsButton from "@/app/components/EditDocsButton";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -12,7 +13,6 @@ export default async function Home() {
       createdAt: "desc",
     },
   });
-
   const documents = await prisma.document.findMany({
     orderBy: {
       createdAt: "desc",
@@ -22,7 +22,6 @@ export default async function Home() {
       material: true,
     },
   });
-
   return (
     <section className="container mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold mb-6">Materi</h1>
@@ -43,13 +42,16 @@ export default async function Home() {
                     {doc.title}
                   </Link>{" "}
                   <span className="text-white text-xl">
-                    | {doc.material.name}
+                    {" "}
+                    | {doc.material.name}{" "}
                   </span>
                 </div>
                 <p className="text-sm text-gray-500">
-                  Dibuat oleh {doc.author.name}
+                  {" "}
+                  Dibuat oleh {doc.author.name}{" "}
                 </p>
                 <p className="text-sm text-gray-500">
+                  {" "}
                   {new Intl.DateTimeFormat("id-ID", {
                     year: "numeric",
                     month: "long",
@@ -59,7 +61,10 @@ export default async function Home() {
                   }).format(doc.createdAt)}
                 </p>
               </div>
-              <DeleteDocButton id={doc.id} />
+              <div className="flex items-center gap-2">
+                <EditDocsButton doc={doc} mats={mats} />
+                <DeleteDocButton id={doc.id} />
+              </div>
             </li>
           ))
         ) : (

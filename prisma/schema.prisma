@@ -10,6 +10,7 @@ datasource db {
 enum UserRole {
     ADMIN
     EDITOR
+    APPROVAL
 }
 
 model User {
@@ -20,7 +21,7 @@ model User {
     documents Document[]
     createdAt DateTime   @default(now())
     updatedAt DateTime   @updatedAt
-    role      UserRole   @default(EDITOR)
+    role      UserRole   @default(APPROVAL)
 }
 
 model Material {

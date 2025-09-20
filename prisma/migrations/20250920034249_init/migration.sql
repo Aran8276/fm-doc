@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "public"."UserRole" AS ENUM ('ADMIN', 'EDITOR');
+CREATE TYPE "public"."UserRole" AS ENUM ('ADMIN', 'EDITOR', 'APPROVAL');
 
 -- CreateTable
 CREATE TABLE "public"."User" (
@@ -9,7 +9,7 @@ CREATE TABLE "public"."User" (
     "password" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "role" "public"."UserRole" NOT NULL DEFAULT 'EDITOR',
+    "role" "public"."UserRole" NOT NULL DEFAULT 'APPROVAL',
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -19,6 +19,10 @@ CREATE TABLE "public"."Material" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
+    "imageUrl" TEXT NOT NULL,
+    "homeUrl" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Material_pkey" PRIMARY KEY ("id")
 );

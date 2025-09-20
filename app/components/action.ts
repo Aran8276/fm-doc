@@ -4,6 +4,7 @@
 import prisma from "@/src/lib/prisma";
 import { unlink } from "fs/promises";
 import path from "path";
+import { revalidatePath } from "next/cache";
 
 export const deleteMaterial = async (id: string) => {
   try {
@@ -12,7 +13,7 @@ export const deleteMaterial = async (id: string) => {
     });
 
     if (!material) {
-      throw new Error("Material not found");
+      return { success: false, message: "Material not found" };
     }
 
     const filePath = path.join(process.cwd(), "public", material.imageUrl);
@@ -22,7 +23,10 @@ export const deleteMaterial = async (id: string) => {
     } catch (error: any) {
       if (error.code !== "ENOENT") {
         console.error("Error deleting file:", error);
-        throw new Error("Could not delete the associated file.");
+        return {
+          success: false,
+          message: "Could not delete the associated file.",
+        };
       }
     }
 
@@ -31,16 +35,25 @@ export const deleteMaterial = async (id: string) => {
         id: id,
       },
     });
+    revalidatePath("/editor-materials");
+    return { success: true };
   } catch (error) {
     console.error("Error deleting material:", error);
-    throw error;
+    return { success: false, message: "An internal error occurred." };
   }
 };
 
 export const deleteDoc = async (id: string) => {
-  await prisma.document.delete({
-    where: {
-      id: id,
-    },
-  });
+  try {
+    await prisma.document.delete({
+      where: {
+        id: id,
+      },
+    });
+    revalidatePath("/editor-docs");
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting document:", error);
+    return { success: false, message: "An internal error occurred." };
+  }
 };

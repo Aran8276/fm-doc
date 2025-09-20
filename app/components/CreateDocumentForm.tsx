@@ -82,24 +82,30 @@ export default function CreateDocumentForm({
                 <Label htmlFor="material" className="text-sm w-fit">
                   Peminatan
                 </Label>
-                <Select required onValueChange={setMaterialId}>
-                  <SelectTrigger id="material" className="w-full mb-2">
-                    <SelectValue placeholder="Pilih Peminatan" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {mats.map((item, index) => (
-                        <SelectItem
-                          key={index}
-                          className="cursor-pointer"
-                          value={item.id}
-                        >
-                          {item.name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                {mats.length > 0 ? (
+                  <Select required onValueChange={setMaterialId}>
+                    <SelectTrigger id="material" className="w-full mb-2">
+                      <SelectValue placeholder="Pilih Peminatan" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {mats.map((item, index) => (
+                          <SelectItem
+                            key={index}
+                            className="cursor-pointer"
+                            value={item.id}
+                          >
+                            {item.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <p className="text-sm cursor-not-allowed p-3 mb-2 bg-secondary rounded-md text-secondary-foreground">
+                    Tambahkan peminatan terlebih dahulu.
+                  </p>
+                )}
 
                 <Label htmlFor="title" className="text-sm w-fit">
                   Nama Materi
@@ -118,13 +124,20 @@ export default function CreateDocumentForm({
               <DialogClose asChild className="cursor-pointer">
                 <Button variant={`outline`}>Batalkan</Button>
               </DialogClose>
-              {loading ? (
-                <Button disabled className="px-6 cursor-pointer h-full">
-                  <Loader className="animate-spin" />
-                  Tambah
-                </Button>
+              {mats.length > 0 ? (
+                loading ? (
+                  <Button disabled className="px-6 cursor-pointer h-full">
+                    <Loader className="animate-spin" />
+                    Tambah
+                  </Button>
+                ) : (
+                  <Button type="submit" className="px-6 cursor-pointer h-full">
+                    <Plus />
+                    Tambah
+                  </Button>
+                )
               ) : (
-                <Button type="submit" className="px-6 cursor-pointer h-full">
+                <Button disabled className="px-6 h-full">
                   <Plus />
                   Tambah
                 </Button>

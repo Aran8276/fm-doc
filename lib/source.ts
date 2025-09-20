@@ -1,4 +1,3 @@
-// lib/source.ts
 import { PageTree } from "fumadocs-core/server";
 import prisma from "@/src/lib/prisma";
 import type { StructuredData } from "fumadocs-core/mdx-plugins";

@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Loader, Trash2 } from "lucide-react";
 import React, { useState } from "react";
-import { deleteDoc } from "./action";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,18 +14,20 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
+import { deleteUser } from "../(admin)/manage-user/actions";
+import { Toaster } from "@/components/ui/sonner";
 
-const DeleteDocButton = ({ id }: { id: string }) => {
+const DeleteUserButton = ({ id }: { id: string }) => {
   const [loading, setLoading] = useState(false);
 
   const handleDelete = async () => {
     setLoading(true);
-    const result = await deleteDoc(id);
+    const result = await deleteUser(id);
     if (result.success) {
-      toast("Materi berhasil dihapus!");
+      toast("Pengguna berhasil dihapus!");
     } else {
-      toast.error(result.message || "Gagal menghapus materi.");
+      toast.error(result.message || "Gagal menghapus pengguna.");
     }
     setLoading(false);
   };
@@ -83,4 +84,4 @@ const DeleteDocButton = ({ id }: { id: string }) => {
   );
 };
 
-export default DeleteDocButton;
+export default DeleteUserButton;
