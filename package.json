@@ -8,10 +8,10 @@
     "build": "next build --turbopack",
     "generate": "npx prisma generate",
     "deploy": "npx prisma migrate deploy",
-    "start": "next start -p 9500",
+    "start": "next start -p 9600",
     "lint": "eslint",
     "dev-all": "concurrently \"npm run dev\" \"npm run ws\"",
-    "start-all": "concurrently \"wait-on http://localhost:8080 && npm run start\" \"npm run ws\""
+    "start-all": "concurrently \"wait-on http://localhost:9700 && npm run start\" \"npm run ws\""
   },
   "dependencies": {
     "@codemirror/collab": "^6.1.1",
