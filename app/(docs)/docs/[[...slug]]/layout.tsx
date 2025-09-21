@@ -1,5 +1,3 @@
-// app/(docs)/docs/[[...slug]]/layout.js
-
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import { getPageTree } from "@/lib/source";
 import prisma from "@/src/lib/prisma";

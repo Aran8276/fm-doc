@@ -1,9 +1,9 @@
-import { DocsPage, DocsBody } from "fumadocs-ui/page";
-import { notFound } from "next/navigation";
-import { getDocument } from "@/lib/source";
-import { compileMDX } from "@fumadocs/mdx-remote";
-import defaultMdxComponents from "fumadocs-ui/mdx";
-import type { MDXComponents } from "mdx/types";
+import { DocsPage, DocsBody } from 'fumadocs-ui/page';
+import { notFound } from 'next/navigation';
+import { getDocument } from '@/lib/source';
+import { compileMDX } from '@fumadocs/mdx-remote';
+import defaultMdxComponents from 'fumadocs-ui/mdx';
+import type { MDXComponents } from 'mdx/types';
 
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
   return {
@@ -22,7 +22,6 @@ export default async function Page({
   const page = await getDocument((await params).slug?.[1]);
 
   if (!page || !page.content) {
-    console.log(page);
     notFound();
   }
 

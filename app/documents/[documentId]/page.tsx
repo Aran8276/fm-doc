@@ -5,9 +5,9 @@ import { notFound } from "next/navigation";
 import Editor from "./Editor";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     documentId: string;
-  };
+  }>;
 }
 
 export default async function DocumentPage({ params }: PageProps) {
@@ -24,7 +24,7 @@ export default async function DocumentPage({ params }: PageProps) {
 
   const document = await prisma.document.findUnique({
     where: {
-      id: params.documentId,
+      id: (await params).documentId,
     },
   });
 
@@ -36,6 +36,7 @@ export default async function DocumentPage({ params }: PageProps) {
     <Editor
       documentId={document.id}
       initialContent={document.content || ""}
+      title={document.title || ""}
       userName={session.user?.name || "Anonymous"}
     />
   );

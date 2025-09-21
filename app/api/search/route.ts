@@ -1,7 +1,7 @@
 import { source } from "@/lib/source";
 import { createSearchAPI } from "fumadocs-core/search/server";
 
-export const revalidate = false;
+export const revalidate = 900;
 
 export const { GET } = createSearchAPI("advanced", {
   language: "english",

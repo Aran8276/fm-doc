@@ -1,4 +1,3 @@
-import { getDefaultMDXOptions } from "fumadocs-mdx/config";
 import { createMDX } from "fumadocs-mdx/next";
 
 const withMDX = createMDX({
@@ -7,7 +6,7 @@ const withMDX = createMDX({
 });
 
 export default withMDX({
-  reactStrictMode: true,
+reactStrictMode: true,
   images: {
     remotePatterns: [
       {
@@ -16,5 +15,4 @@ export default withMDX({
       },
     ],
   },
-  
 });

@@ -1,4 +1,3 @@
-// app/(editor)/editor-docs/Controls.tsx
 "use client";
 
 import { Input } from "@/components/ui/input";

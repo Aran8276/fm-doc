@@ -143,7 +143,7 @@
   }
 
   .cm-editor {
-    @apply !h-screen !text-white;
+    @apply !h-[91vh] !text-white;
   }
 
   .cm-content {
@@ -164,16 +164,6 @@
 
   #nd-toc {
     @apply !pt-24;
-  }
-
-  .ͼ7,
-  .ͼ5 {
-    color: #eda35e !important;
-  }
-
-  .ͼ6,
-  .ͼc {
-    @apply !text-blue-400;
   }
 
   .dark {

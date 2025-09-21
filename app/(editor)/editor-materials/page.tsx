@@ -1,4 +1,3 @@
-// app/(editor)/editor-materials/page.tsx
 import prisma from "@/src/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/src/lib/auth";
