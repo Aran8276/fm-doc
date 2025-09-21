@@ -4,13 +4,13 @@
   "private": true,
   "scripts": {
     "ws": "node server.js",
-    "dev": "next dev --turbopack",
+    "dev-single": "next dev --turbopack",
+    "dev": "concurrently \"npm run dev-single\" \"npm run ws\"",
     "build": "next build --turbopack",
     "generate": "npx prisma generate",
     "deploy": "npx prisma migrate deploy",
     "start": "next start -p 9600",
     "lint": "eslint",
-    "dev-all": "concurrently \"npm run dev\" \"npm run ws\"",
     "start-all": "concurrently \"wait-on http://localhost:9700 && npm run start\" \"npm run ws\""
   },
   "dependencies": {

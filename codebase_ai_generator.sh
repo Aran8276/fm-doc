@@ -44,3 +44,5 @@ while IFS= read -r -d '' file; do
     
     printf '%s %s' "$file" "$content_oneline" >> "$OUTPUT_FILE"
 done
+
+echo "Success!"

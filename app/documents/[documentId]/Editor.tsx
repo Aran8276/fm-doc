@@ -247,7 +247,7 @@ export default function Editor({
 
     const ydoc = new Y.Doc();
     const provider = new WebsocketProvider(
-      `ws://${process.env.NEXT_PUBLIC_WEBSOCKET_URL}`,
+      `${process.env.NEXT_PUBLIC_WEBSOCKET_URL}`,
       documentId,
       ydoc
     );

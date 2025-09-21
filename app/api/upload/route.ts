@@ -17,8 +17,7 @@ export async function POST(request: NextRequest) {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
 
-  const uploadDir = join(process.cwd(), "public", "uploads");
-
+  const uploadDir = join(process.cwd(), "writable", "uploads");
   try {
     await mkdir(uploadDir, { recursive: true });
   } catch (error) {
@@ -34,7 +33,7 @@ export async function POST(request: NextRequest) {
 
   try {
     await writeFile(path, buffer);
-    const publicPath = `/uploads/${filename}`;
+    const publicPath = `/api/uploads/${filename}`;
     return NextResponse.json({ success: true, path: publicPath });
   } catch (error) {
     console.error("Error writing file:", error);
