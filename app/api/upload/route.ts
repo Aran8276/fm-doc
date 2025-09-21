@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 
   try {
     await writeFile(path, buffer);
-    const publicPath = `/api/uploads/${filename}`;
+    const publicPath = `${process.env.APP_URL}/api/uploads/${filename}`;
     return NextResponse.json({ success: true, path: publicPath });
   } catch (error) {
     console.error("Error writing file:", error);

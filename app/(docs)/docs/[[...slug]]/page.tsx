@@ -17,11 +17,12 @@ export const useMDXComponents = getMDXComponents;
 export default async function Page({
   params,
 }: {
-  params: { slug?: string[] };
+  params: Promise<{ slug?: string[] }>;
 }) {
-  const page = await getDocument(params.slug?.[1]);
+  const page = await getDocument((await params).slug?.[1]);
 
   if (!page || !page.content) {
+    console.log(page);
     notFound();
   }
 
