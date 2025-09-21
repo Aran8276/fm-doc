@@ -1,5 +1,6 @@
 import { EditorView } from "@codemirror/view";
-import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
+import { HighlightStyle } from "@codemirror/language";
+import { syntaxHighlighting } from "@codemirror/language";
 import { tags } from "@lezer/highlight";
 
 const blue = "#60a5fa";
